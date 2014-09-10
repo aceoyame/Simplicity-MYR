@@ -1,4 +1,4 @@
-Simplicity-MYR
+Simplicity-MYR - V0.3.2
 ==============
 
 Minimal clicking multiple Myriadcoin algorithm miner 
