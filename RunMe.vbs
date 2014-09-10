@@ -7,7 +7,7 @@ Dim WalletAdr 'Self Explanitory
 Dim StrFileName
 Dim Filesys
 Dim objFSO
-Dim ObjFSO2 ' Avoiding the certain redefinition
+Dim ObjFSO2 ' Avoiding redefinition
 Dim Appdata2 ' Appdata is s system variable so it doesn't like anything else /sad
 Dim strfolderpath2 'Documentation check path
 Dim ObjFile 
@@ -63,32 +63,36 @@ dim ScryptPath
 dim groestlpath
 dim skeinpath
 dim qubitpath
+dim Strfolderpath3
+dim User2
+
 
 Set Filesys = CreateObject("Scripting.FileSystemObject") 
 Set objFSO = CreateObject("Scripting.FileSystemObject") 
 Set objShell = CreateObject("Wscript.Shell")
 Set wshSystemEnv = objShell.Environment("SYSTEM")
 
-ThreadsPath = ".\Scripts\Threads.conf"
-CPUPath = ".\Scripts\CPUMine.conf"
-HiddenPath = ".\Scripts\Hidden.conf"
-
-
-
-
-
-
 objShell.CurrentDirectory = ".\Scripts" ' Change working directory 
+
+ThreadsPath = ".\Threads.conf"
+CPUPath = ".\CPUMine.conf"
+HiddenPath = ".\Hidden.conf"
 
 'Begin Documentation Run Check
 Appdata2=objShell.ExpandEnvironmentStrings("%Appdata%")
 Strfolderpath2 = Appdata2 & "\Electrum-MYR" 
+User2=objShell.ExpandEnvironmentStrings("%USERPROFILE%")
+Strfolderpath3 = User2 & "\Desktop" 
 Set objShell = CreateObject("Wscript.Shell")
+ If Not objFSO.FileExists(User2 & "\desktop" & "\Electrum-MyrWallet.exe") then
+ objFSO.CopyFile "Electrum-MyrWallet.exe", (User2 & "\desktop\")
+End If
  If Not objFSO.FolderExists(strfolderpath2) then
   Electrumpresent =0
   CreateObject("WScript.Shell").Run "http://myriadplatform.org/mining-setup/"
-  CreateObject("WScript.Shell").Run "Wallet.exe"
+  CreateObject("WScript.Shell").Run ".\Electrum-MyrWallet.exe"
 'One time only, Set Threads VAR to 1 less core than host system maximum to try to keep system fluidity
+ End If
 
 strnumcpu=objShell.ExpandEnvironmentStrings("%NUMBER_OF_PROCESSORS%")
 intnumcpu=cint(strnumcpu)
@@ -96,9 +100,7 @@ Set objFileToWrite = CreateObject("Scripting.FileSystemObject").OpenTextFile(Thr
 finalnumcpu=intnumcpu-1
 objFileToWrite.WriteLine(finalnumcpu)
 objFileToWrite.Close
-  
-  
- End If
+
 set objShell = CreateObject("Wscript.Shell")
  If objFSO.FolderExists(strfolderpath2) then
   Electrumpresent =1
@@ -176,7 +178,7 @@ elseif objFSO.fileExists(strfolderpath2 & "\wallets\default_wallet") then
 i=1
 end if
 If i=0 and Electrumpresent=1 then
-CreateObject("WScript.Shell").Run "Wallet.exe"
+CreateObject("WScript.Shell").Run "Electrum-MyrWallet.exe"
 end if
 
 'Sleep loop
